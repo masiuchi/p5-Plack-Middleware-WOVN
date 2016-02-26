@@ -1,0 +1,68 @@
+{
+   "abstract" : "Translates PSGI application by using WOVN.io.",
+   "author" : [
+      "Masahiro Iuchi."
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v3.0.1, CPAN::Meta::Converter version 2.150001",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Plack-Middleware-WOVN",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.035"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Class::Accessor::Fast" : "0",
+            "HTML::Element" : "0",
+            "HTML::TreeBuilder::XPath" : "0",
+            "JSON" : "0",
+            "LWP::UserAgent" : "0",
+            "Mojo::URL" : "0",
+            "Plack::Middleware" : "0",
+            "Plack::Util" : "0",
+            "Plack::Util::Accessor" : "0",
+            "URI::Escape" : "0",
+            "parent" : "0",
+            "perl" : "5.010"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.98",
+            "URI" : "0"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "version" : "0.01"
+}
