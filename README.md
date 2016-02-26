@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/masiuchi/p5-Plack-Middleware-WOVN.svg?branch=master)](https://travis-ci.org/masiuchi/p5-Plack-Middleware-WOVN)
 # NAME
 
 Plack::Middleware::WOVN - Translates PSGI application by using WOVN.io.

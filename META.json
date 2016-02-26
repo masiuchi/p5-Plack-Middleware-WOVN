@@ -64,6 +64,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/masiuchi/p5-Plack-Middleware-WOVN/issues"
+      },
+      "homepage" : "https://github.com/masiuchi/p5-Plack-Middleware-WOVN",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/masiuchi/p5-Plack-Middleware-WOVN.git",
+         "web" : "https://github.com/masiuchi/p5-Plack-Middleware-WOVN"
+      }
+   },
    "version" : "0.01",
    "x_contributors" : [
       "Masahiro Iuchi <masahiro.iuchi@gmail.com>"
