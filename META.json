@@ -64,5 +64,8 @@
       }
    },
    "release_status" : "unstable",
-   "version" : "0.01"
+   "version" : "0.01",
+   "x_contributors" : [
+      "Masahiro Iuchi <masahiro.iuchi@gmail.com>"
+   ]
 }
