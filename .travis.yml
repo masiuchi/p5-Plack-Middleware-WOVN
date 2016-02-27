@@ -12,6 +12,12 @@ cache:
   directories:
     - ${HOME}/perl5/perlbrew/perls/${TRAVIS_PERL_VERSION}/bin
     - ${HOME}/perl5/perlbrew/perls/${TRAVIS_PERL_VERSION}/lib/site_perl
+before_install:
+  - cpanm --quiet Devel::Cover::Report::Coveralls
 install:
   - cpanm --quiet --installdeps .
+script:
+  - perl Build.PL && ./Build && cover -test
+after_success:
+  - cover -report coveralls
 
