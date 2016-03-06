@@ -46,7 +46,7 @@ sub call {
     if ( $headers->path_lang eq $STORE->settings->{default_lang} ) {
         my $redirect_headers
             = $headers->redirect( $STORE->settings->{default_lang} );
-        return [ 307, $redirect_headers, [''] ];
+        return [ 307, [$redirect_headers], [''] ];
     }
     my $lang = $headers->lang_code;
 
