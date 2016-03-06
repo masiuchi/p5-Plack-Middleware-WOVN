@@ -2,6 +2,10 @@ Revision history for Perl extension Plack-Middleware-WOVN
 
 {{$NEXT}}
 
+0.04 2016-03-06T16:18:30Z
+
+    - Fix 307 redirect does not work. #6
+
 0.03 2016-02-26T07:45:59Z
 
     - original version
