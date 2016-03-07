@@ -2,6 +2,11 @@ Revision history for Perl extension Plack-Middleware-WOVN
 
 {{$NEXT}}
 
+0.05 2016-03-07T13:49:01Z
+
+    - Remove Try::Tiny from Plack::Middleware::WOVN. #8
+    - Fix 307 redirect bug again. #7
+
 0.04 2016-03-06T16:18:30Z
 
     - Fix 307 redirect does not work. #6
