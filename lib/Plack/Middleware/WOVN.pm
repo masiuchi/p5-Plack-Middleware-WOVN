@@ -13,7 +13,6 @@ use HTML::TreeBuilder::XPath;
 use Mojo::URL;
 use Plack::Util;
 use Plack::Util::Accessor qw( settings );
-use Try::Tiny;
 use URI::Escape;
 
 use Plack::Middleware::WOVN::Headers;
