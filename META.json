@@ -75,7 +75,7 @@
          "web" : "https://github.com/masiuchi/p5-Plack-Middleware-WOVN"
       }
    },
-   "version" : "0.04",
+   "version" : "0.05",
    "x_contributors" : [
       "Masahiro Iuchi <masahiro.iuchi@gmail.com>",
       "Masahiro Iuchi <iuchi@wovn.io>"
