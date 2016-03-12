@@ -2,6 +2,11 @@ Revision history for Perl extension Plack-Middleware-WOVN
 
 {{$NEXT}}
 
+0.06 2016-03-12T09:26:34Z
+
+    - Add LWP::Protocol::https. #12
+    - Do not decode JSON when parsing. #12
+
 0.05 2016-03-07T13:49:01Z
 
     - Remove Try::Tiny from Plack::Middleware::WOVN. #8
