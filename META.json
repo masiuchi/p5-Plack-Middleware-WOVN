@@ -46,6 +46,7 @@
             "HTML::Element" : "0",
             "HTML::TreeBuilder::XPath" : "0",
             "JSON" : "0",
+            "LWP::Protocol::https" : "0",
             "LWP::UserAgent" : "0",
             "Mojo::URL" : "0",
             "Plack::Middleware" : "0",
@@ -75,7 +76,7 @@
          "web" : "https://github.com/masiuchi/p5-Plack-Middleware-WOVN"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_contributors" : [
       "Masahiro Iuchi <masahiro.iuchi@gmail.com>",
       "Masahiro Iuchi <iuchi@wovn.io>"
