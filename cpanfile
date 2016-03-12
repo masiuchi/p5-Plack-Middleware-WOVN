@@ -9,6 +9,7 @@ requires 'Class::Accessor::Fast';
 requires 'HTML::Element';
 requires 'HTML::TreeBuilder::XPath';
 requires 'JSON';
+requires 'LWP::Protocol::https';
 requires 'LWP::UserAgent';
 requires 'Mojo::URL';
 requires 'Plack::Util';

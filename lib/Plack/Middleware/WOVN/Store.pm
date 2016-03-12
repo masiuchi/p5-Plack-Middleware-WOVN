@@ -139,7 +139,7 @@ sub get_values {
 
     my $values = {};
     if ( $res->is_success ) {
-        $values = eval { JSON::decode_json( $res->content ) } || {};
+        $values = eval { JSON::from_json( $res->content ) } || {};
     }
 
     $values;
