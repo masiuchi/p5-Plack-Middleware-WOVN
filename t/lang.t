@@ -7,6 +7,8 @@ use_ok('Plack::Middleware::WOVN::Lang');
 
 ok($Plack::Middleware::WOVN::Lang::LANG);
 
+is( scalar( keys(%$Plack::Middleware::WOVN::Lang::LANG) ), 28 );
+
 for my $key ( keys %$Plack::Middleware::WOVN::Lang::LANG ) {
     my $l = $Plack::Middleware::WOVN::Lang::LANG->{$key};
     ok( exists $l->{name} );

@@ -6,6 +6,7 @@ use utf8;
 #http://msdn.microsoft.com/en-us/library/hh456380.aspx
 our $LANG = {
     'ar' => { name => 'ﺎﻠﻋﺮﺒﻳﺓ', code => 'ar', en => 'Arabic' },
+    'bg' => { name => 'Български', code => 'bg', en => 'Bulgarian' },
     'zh-CHS' =>
         { name => '简体中文', code => 'zh-CHS', en => 'Simp Chinese' },
     'zh-CHT' =>
