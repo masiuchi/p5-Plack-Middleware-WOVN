@@ -30,3 +30,6 @@ cover_db/
 MYMETA.*
 
 /Plack-Middleware-WOVN-*
+
+/.perl-version
+

@@ -109,7 +109,7 @@ sub settings {
         }
         elsif ( $settings->{url_pattern} eq 'query' ) {
             $settings->{url_pattern_reg}
-                = "((\\?.*&)|\\?)wovn=(?<lang>[^&]+)(&|$)";
+                = "((\\?.*&)|\\?)wovn=(?<lang>[^&]+)(&|\$)";
         }
         elsif ( $settings->{url_pattern} eq 'subdomain' ) {
             $settings->{url_pattern_reg} = "^(?<lang>[^.]+)\.";
