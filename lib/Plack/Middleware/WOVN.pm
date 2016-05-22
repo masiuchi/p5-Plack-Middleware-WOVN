@@ -180,6 +180,9 @@ sub check_wovn_ignore {
             return 0;
         }
     }
+    if ( !$node->getParentNode ) {
+        return 0;
+    }
     check_wovn_ignore( $node->getParentNode );
 }
 
@@ -224,8 +227,15 @@ sub switch_lang {
             my $data    = $text_index->{$node_text}{$lang}[0]{data};
             my $content = $node->getValue;
             $content =~ s/^(\s*)[\S\s]*(\s*)$/$1$data$2/g;
-            $node->getParentNode->delete_content;
-            $node->getParentNode->push_content($content);
+            if ( $node->getParentNode ) {
+                $node->getParentNode->delete_content;
+                $node->getParentNode->push_content($content);
+            }
+            else {
+                # Some nodes do not have parent node,
+                # whose content cannot be updated.
+                $node->{_content} = $data;
+            }
         }
     }
 
