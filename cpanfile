@@ -6,7 +6,7 @@ requires 'Plack::Middleware';
 requires 'parent';
 
 requires 'Class::Accessor::Fast';
-requires 'HTML::TreeBuilder::XPath';
+requires 'HTML::HTML5::Parser';
 requires 'JSON';
 requires 'LWP::Protocol::https';
 requires 'LWP::UserAgent';
