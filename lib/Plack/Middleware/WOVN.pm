@@ -13,7 +13,7 @@ use Mojo::URL;
 use Plack::Util;
 use Plack::Util::Accessor qw( settings );
 use URI::Escape;
-use XML::LibXML::Element;
+use XML::LibXML;
 
 use Plack::Middleware::WOVN::Headers;
 use Plack::Middleware::WOVN::Lang;
