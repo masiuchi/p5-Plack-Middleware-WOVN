@@ -196,7 +196,7 @@ sub switch_lang {
     my $ignore_all     = 0;
     my $string_index   = {};
 
-    my $tree = HTML::HTML5::Parser->load_html($body);
+    my $tree = HTML::HTML5::Parser->load_html(string => $body);
 
     if ( $ignore_all || $tree->exists('//html[@wovn-ignore]') ) {
         $ignore_all = 1;
