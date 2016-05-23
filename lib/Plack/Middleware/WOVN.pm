@@ -8,12 +8,12 @@ our $VERSION = '0.06';
 
 require bytes;
 
-use HTML::Element;
-use HTML::TreeBuilder::XPath;
+use HTML::HTML5::Parser;
 use Mojo::URL;
 use Plack::Util;
 use Plack::Util::Accessor qw( settings );
 use URI::Escape;
+use XML::LibXML::Element;
 
 use Plack::Middleware::WOVN::Headers;
 use Plack::Middleware::WOVN::Lang;
@@ -196,8 +196,7 @@ sub switch_lang {
     my $ignore_all     = 0;
     my $string_index   = {};
 
-    my $tree = HTML::TreeBuilder::XPath->new;
-    $tree->parse($body);
+    my $tree = HTML::HTML5::Parser->load_html($body);
 
     if ( $ignore_all || $tree->exists('//html[@wovn-ignore]') ) {
         $ignore_all = 1;
@@ -310,7 +309,7 @@ sub switch_lang {
     ($parent_node) = $tree->findnodes('//html') unless $parent_node;
 
     {
-        my $insert_node = HTML::Element->new('script');
+        my $insert_node = XML::LibXML::Element->new('script');
         $insert_node->attr( 'src',   '//j.wovn.io/1' );
         $insert_node->attr( 'async', 'true' );
         my $data_wovnio
@@ -330,7 +329,7 @@ sub switch_lang {
     }
 
     for my $l ( get_langs($values) ) {
-        my $insert_node = HTML::Element->new('link');
+        my $insert_node = XML::LibXML::Element->new('link');
         $insert_node->attr( 'rel',      'alternate' );
         $insert_node->attr( 'hreflang', $l );
         $insert_node->attr( 'href',     $headers->redirect_location($l) );
