@@ -2,6 +2,13 @@ Revision history for Perl extension Plack-Middleware-WOVN
 
 {{$NEXT}}
 
+0.07 2016-05-24T15:13:13Z
+
+    - Change HTML parser. #19
+    - Fix empty parent node error. #18
+    - Fix broken regexp of query mode. #15
+    - Support Bulgarian. #14
+
 0.06 2016-03-12T09:26:34Z
 
     - Add LWP::Protocol::https. #12
