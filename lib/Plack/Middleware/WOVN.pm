@@ -9,6 +9,7 @@ our $VERSION = '0.06';
 require bytes;
 
 use HTML::HTML5::Parser;
+use HTML::HTML5::Writer;
 use Mojo::URL;
 use Plack::Util;
 use Plack::Util::Accessor qw( settings );
@@ -170,13 +171,13 @@ sub add_lang_code {
 
 sub check_wovn_ignore {
     my $node = shift;
-    if ( !$node->isTextNode ) {
-        if ( defined $node->attr('wovn-ignore') ) {
-            $node->attr( 'wovn-ignore', '' )
-                if $node->attr('wovn-ignore') eq 'wovn-ignore';
+    if ( !$node->isa('XML::LibXML::Text') ) {
+        if ( defined $node->getAttribute('wovn-ignore') ) {
+            $node->setAttribute( 'wovn-ignore', '' )
+                if $node->getAttribute('wovn-ignore') eq 'wovn-ignore';
             return 1;
         }
-        elsif ( $node->tag eq 'html' ) {
+        elsif ( $node->nodeName eq 'html' ) {
             return 0;
         }
     }
@@ -193,25 +194,31 @@ sub switch_lang {
     my $text_index     = $values->{text_vals}      || {};
     my $src_index      = $values->{img_vals}       || {};
     my $img_src_prefix = $values->{img_src_prefix} || '';
-    my $ignore_all     = 0;
     my $string_index   = {};
 
-    my $tree = HTML::HTML5::Parser->load_html(string => $body);
+    my $tree = HTML::HTML5::Parser->load_html( string => $body );
+    $tree->setEncoding('UTF-8');
 
-    if ( $ignore_all || $tree->exists('//html[@wovn-ignore]') ) {
-        $ignore_all = 1;
+    my $writer = HTML::HTML5::Writer->new(
+        quote_attributes => 1,
+        voids            => 1,
+        start_tags       => 1,
+        end_tags         => 1
+    );
+
+    if ( $tree->documentElement->hasAttribute('wovn-ignore') ) {
         $body =~ s/href="([^"]*)"/"href=\"".uri_unescape($1)."\""/eg;
         return $body;
     }
 
     if ( $lang ne $STORE->settings->{default_lang} ) {
-        for my $node ( $tree->findnodes('//a') ) {
+        for my $node ( $tree->findnodes("//*[local-name()='a']") ) {
             next if check_wovn_ignore($node);
-            my $href = $node->attr('href');
+            my $href = $node->getAttribute('href');
             my $new_href
                 = add_lang_code( $href, $STORE->settings->{url_pattern},
                 $lang, $headers );
-            $node->attr( 'href', $new_href );
+            $node->setAttribute( 'href', $new_href );
         }
     }
 
@@ -226,41 +233,34 @@ sub switch_lang {
             my $data    = $text_index->{$node_text}{$lang}[0]{data};
             my $content = $node->getValue;
             $content =~ s/^(\s*)[\S\s]*(\s*)$/$1$data$2/g;
-            if ( $node->getParentNode ) {
-                $node->getParentNode->delete_content;
-                $node->getParentNode->push_content($content);
-            }
-            else {
-                # Some nodes do not have parent node,
-                # whose content cannot be updated.
-                $node->{_content} = $data;
-            }
+            $node->setData($content);
         }
     }
 
-    for my $node ( $tree->findnodes('//meta') ) {
+    for my $node ( $tree->findnodes("//*[local-name()='meta']") ) {
         next if check_wovn_ignore($node);
         next
-            if ( $node->attr('name') || $node->attr('property') || '' )
+            if ( $node->getAttribute('name')
+            || $node->getAttribute('property')
+            || '' )
             !~ /^(description|title|og:title|og:description|twitter:title|twitter:description)$/;
 
-        my $node_content = $node->attr('content');
+        my $node_content = $node->getAttribute('content');
         $node_content =~ s/^\s+\|\s+$//g;
         if (   $text_index->{$node_content}
             && $text_index->{$node_content}{$lang}
             && @{ $text_index->{$node_content}{$lang} } )
         {
             my $data    = $text_index->{$node_content}{$lang}[0]{data};
-            my $content = $node->attr('content');
+            my $content = $node->getAttribute('content');
             $content =~ s/^(\s*)[\S\s]*(\s*)$/$1$data$2/g;
-            $node->attr( 'content', $content );
+            $node->setAttribute( 'content', $content );
         }
     }
 
-    for my $node ( $tree->findnodes('//img') ) {
+    for my $node ( $tree->findnodes("//*[local-name()='img']") ) {
         next if check_wovn_ignore($node);
-        if ( lc( $node->as_HTML( '', undef, {} ) ) =~ /src=['"]([^'"]*)['"]/ )
-        {
+        if ( lc( $writer->element($node) ) =~ /src=['"]([^'"]*)['"]/ ) {
             my $src = $1;
             if ( $src !~ /:\/\// ) {
                 if ( $src =~ /^\// ) {
@@ -279,11 +279,11 @@ sub switch_lang {
                 && $src_index->{$src}{$lang}
                 && @{ $src_index->{$src}{$lang} } )
             {
-                $node->attr( 'src',
+                $node->setAttribute( 'src',
                     $img_src_prefix . $src_index->{$src}{$lang}[0]{data} );
             }
         }
-        if ( my $alt = $node->attr('alt') ) {
+        if ( my $alt = $node->getAttribute('alt') ) {
             $alt =~ s/^\s+|\s+$//g;
             if (   $text_index->{$alt}
                 && $text_index->{$alt}{$lang}
@@ -291,27 +291,28 @@ sub switch_lang {
             {
                 my $data = $text_index->{$alt}{$lang}[0]{data};
                 $alt =~ s/^(\s*)[\S\s]*(\s*)$/$1$data$2/g;
-                $node->attr( 'alt', $alt );
+                $node->setAttribute( 'alt', $alt );
             }
         }
     }
 
-    for my $node ( $tree->findnodes('//script') ) {
-        if (   $node->attr('src')
-            && $node->attr('src') =~ /\/\/j.(dev-)?wovn.io(:3000)?\// )
+    for my $node ( $tree->findnodes("//*[local-name()='script']") ) {
+        if (   $node->getAttribute('src')
+            && $node->getAttribute('src')
+            =~ /\/\/j.(dev-)?wovn.io(:3000)?\// )
         {
-            $node->delete;
+            $node->getParentNode->removeChild($node);
         }
     }
 
-    my ($parent_node) = $tree->findnodes('//head');
-    ($parent_node) = $tree->findnodes('//body') unless $parent_node;
-    ($parent_node) = $tree->findnodes('//html') unless $parent_node;
+    my ($parent_node) = $tree->getElementsByTagName('head');
+    ($parent_node) = $tree->getElementByTagName('body') unless $parent_node;
+    $parent_node = $tree->doucmentElement unless $parent_node;
 
     {
         my $insert_node = XML::LibXML::Element->new('script');
-        $insert_node->attr( 'src',   '//j.wovn.io/1' );
-        $insert_node->attr( 'async', 'true' );
+        $insert_node->setAttribute( 'src',   '//j.wovn.io/1' );
+        $insert_node->setAttribute( 'async', 'true' );
         my $data_wovnio
             = 'key='
             . $STORE->settings->{user_token}
@@ -323,27 +324,24 @@ sub switch_lang {
             . $STORE->settings->{url_pattern}
             . '&version='
             . $VERSION;
-        $insert_node->attr( 'data-wovnio', $data_wovnio );
-        $insert_node->content(' ');
-        $parent_node->unshift_content($insert_node);
+        $insert_node->setAttribute( 'data-wovnio', $data_wovnio );
+        $insert_node->appendText(' ');
+        $parent_node->insertBefore( $insert_node, $parent_node->firstChild );
     }
 
     for my $l ( get_langs($values) ) {
         my $insert_node = XML::LibXML::Element->new('link');
-        $insert_node->attr( 'rel',      'alternate' );
-        $insert_node->attr( 'hreflang', $l );
-        $insert_node->attr( 'href',     $headers->redirect_location($l) );
-        $parent_node->push_content($insert_node);
+        $insert_node->setAttribute( 'rel',      'alternate' );
+        $insert_node->setAttribute( 'hreflang', $l );
+        $insert_node->setAttribute( 'href', $headers->redirect_location($l) );
+        $parent_node->appendChild($insert_node);
     }
 
-    my ($html) = $tree->findnodes('//html');
-    ($html) = $tree->findnodes('//HTML') unless $html;
-    $html->attr( 'lang', $lang ) if $html;
+    my $html = $tree->documentElement;
+    $html->setAttribute( 'lang', $lang ) if $html;
 
-    my $new_body = $tree->as_HTML( '', undef, {} );
+    my $new_body = $writer->document($tree);
     $new_body =~ s/href="([^"]*)"/'href="'.uri_unescape($1).'"'/eg;
-
-    $tree->delete;
 
     $new_body;
 }

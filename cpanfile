@@ -7,6 +7,7 @@ requires 'parent';
 
 requires 'Class::Accessor::Fast';
 requires 'HTML::HTML5::Parser';
+requires 'HTML::HTML5::Writer';
 requires 'JSON';
 requires 'LWP::Protocol::https';
 requires 'LWP::UserAgent';
