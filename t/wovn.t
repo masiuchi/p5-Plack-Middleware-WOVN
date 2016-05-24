@@ -586,7 +586,7 @@ subtest 'switch lang with script tag' => sub {
         $h );
 
     my $expected
-        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=0.06"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body>こんにちは</body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body>こんにちは</body></html>);
 
     is( $swapped_body, $expected );
 };
