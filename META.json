@@ -43,8 +43,8 @@
       "runtime" : {
          "requires" : {
             "Class::Accessor::Fast" : "0",
-            "HTML::Element" : "0",
-            "HTML::TreeBuilder::XPath" : "0",
+            "HTML::HTML5::Parser" : "0",
+            "HTML::HTML5::Writer" : "0",
             "JSON" : "0",
             "LWP::Protocol::https" : "0",
             "LWP::UserAgent" : "0",
@@ -53,6 +53,7 @@
             "Plack::Util" : "0",
             "Plack::Util::Accessor" : "0",
             "URI::Escape" : "0",
+            "XML::LibXML" : "0",
             "parent" : "0",
             "perl" : "5.010"
          }
@@ -78,7 +79,7 @@
    },
    "version" : "0.06",
    "x_contributors" : [
-      "Masahiro Iuchi <masahiro.iuchi@gmail.com>",
-      "Masahiro Iuchi <iuchi@wovn.io>"
+      "Masahiro Iuchi <iuchi@wovn.io>",
+      "Masahiro Iuchi <masahiro.iuchi@gmail.com>"
    ]
 }

@@ -370,7 +370,10 @@ subtest 'switch lang' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.page.com/" hreflang="ja" rel="alternate" /></head><body><h1>ベルベデアさんファンクラブ</h1><div><p>こんにちは</p></div> </body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"></script><link rel="alternate" hreflang="ja" href="http://ja.page.com/"/></head><body><h1>ベルベデアさんファンクラブ</h1><div><p>こんにちは</p></div> </body></html>);
+
+    $swapped_body =~ s/>\s+</></gm;
+    $expected =~ s/>\s+</></gm;
 
     is( $swapped_body, $expected );
 };
@@ -391,8 +394,22 @@ subtest 'switch lang meta img alt tags' => sub {
         = Plack::Middleware::WOVN::switch_lang( $body, $values, $url, 'ja',
         $h );
 
-    my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><meta content="こんにちは" name="description" /><meta content="こんにちは" name="title" /><meta content="こんにちは" property="og:title" /><meta content="こんにちは" property="og:description" /><meta content="こんにちは" property="twitter:title" /><meta content="こんにちは" property="twitter:description" /><link href="http://ja.page.com/" hreflang="ja" rel="alternate" /></head><body><h1>ベルベデアさんファンクラブ</h1><div><p>こんにちは</p></div><img alt="こんにちは" src="http://example.com/photo.png" /> </body> </html>);
+    my $expected = <<__HTML__;
+<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><meta content="こんにちは" name="description" />
+ <meta content="こんにちは" name="title" />
+ <meta content="こんにちは" property="og:title" />
+ <meta content="こんにちは" property="og:description" />
+ <meta content="こんにちは" property="twitter:title" />
+ <meta content="こんにちは" property="twitter:description" /><link rel="alternate" hreflang="ja" href="http://ja.page.com/"/></head>
+ <body><h1>ベルベデアさんファンクラブ</h1>
+ <div><p>こんにちは</p></div>
+ <img alt="こんにちは" src="http://example.com/photo.png" />
+ </body></html>
+__HTML__
+    chomp $expected;
+
+    $swapped_body =~ s/>\s+</></gm;
+    $expected =~ s/>\s+</></gm;
 
     is( $swapped_body, $expected );
 };
@@ -414,7 +431,7 @@ subtest 'switch lang wovn ignore' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body><h1>ベルベデアさんファンクラブ</h1><div wovn-ignore=""><p>Hello</p></div> </body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body><h1>ベルベデアさんファンクラブ</h1>\n                <div wovn-ignore=""><p>Hello</p></div>\n              </body></html>);
 
     is( $swapped_body, $expected );
 };
@@ -436,7 +453,7 @@ subtest 'switch lang wovn ignore everything' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body wovn-ignore=""><h1>Mr. Belvedere Fan Club</h1><div><p>Hello</p></div> </body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body wovn-ignore=""><h1>Mr. Belvedere Fan Club</h1>\n                <div><p>Hello</p></div>\n              </body></html>);
 
     is( $swapped_body, $expected );
 };
@@ -458,7 +475,7 @@ subtest 'switch lang wovn ignore empty' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore=""><p>Hello</p></div></body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore=""><p>Hello</p></div></body></html>);
 
     is( $swapped_body, $expected );
 };
@@ -480,7 +497,7 @@ subtest 'switch lang wovn ignore empty single quote' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore=""><p>Hello</p></div></body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore=""><p>Hello</p></div></body></html>);
 
     is( $swapped_body, $expected );
 };
@@ -502,7 +519,7 @@ subtest 'switch lang wovn ignore empty double quote' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore=""><p>Hello</p></div></body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore=""><p>Hello</p></div></body></html>);
 
     is( $swapped_body, $expected );
 };
@@ -524,7 +541,7 @@ subtest 'switch lang wovn ignore value single quote' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore="value"><p>Hello</p></div></body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore="value"><p>Hello</p></div></body></html>);
 
     is( $swapped_body, $expected );
 };
@@ -546,7 +563,30 @@ subtest 'switch lang wovn ignore value double quote' => sub {
         $h );
 
     my $expected
-        = qq(<html lang="ja"><head><script async="true" data-wovnio="key=&backend=true&currentLang=ja&defaultLang=en&urlPattern=path&version=$version" src="//j.wovn.io/1"></script><link href="http://ja.ignore-page.com/" hreflang="ja" rel="alternate" /></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore="value"><p>Hello</p></div></body></html>);
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=$version"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body><h1>Mr.BelvedereFanClub</h1><div wovn-ignore="value"><p>Hello</p></div></body></html>);
+
+    is( $swapped_body, $expected );
+};
+
+subtest 'switch lang with script tag' => sub {
+    my $h = Plack::Middleware::WOVN::Headers->new(
+        &get_env( { url => 'http://ignore-page.com' } ),
+        &get_settings(
+            {   url_pattern     => 'subdomain',
+                url_pattern_reg => '^(?<lang>[^.]+).'
+            }
+        )
+    );
+    my $body
+        = '<html><head><script src="//j.wovn.io/1" data-wovnio="key=2Wle3" async></script></head><body>Hello</body></html>';
+    my $values = &generate_values;
+    my $url    = $h->url;
+    my $swapped_body
+        = Plack::Middleware::WOVN::switch_lang( $body, $values, $url, 'ja',
+        $h );
+
+    my $expected
+        = qq(<!DOCTYPE html><html lang="ja"><head><script src="//j.wovn.io/1" async="true" data-wovnio="key=&amp;backend=true&amp;currentLang=ja&amp;defaultLang=en&amp;urlPattern=path&amp;version=0.06"> </script><link rel="alternate" hreflang="ja" href="http://ja.ignore-page.com/"/></head><body>こんにちは</body></html>);
 
     is( $swapped_body, $expected );
 };
