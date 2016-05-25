@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 use parent 'Plack::Middleware';
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 require bytes;
 
