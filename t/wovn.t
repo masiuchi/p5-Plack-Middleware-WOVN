@@ -8,8 +8,6 @@ use File::Spec;
 use lib File::Spec->catdir( getcwd(), 't', 'lib' );
 use TestHelper qw( get_env get_settings generate_body generate_values );
 
-use HTML::TreeBuilder::XPath;
-
 my $class = 'Plack::Middleware::WOVN';
 
 use_ok($class);
